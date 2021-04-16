@@ -11,6 +11,7 @@
     <li><a href="#desenvolvido-com">Desenvolvido com</a></li>
      <li><a href="#pré-requisitos">Pré-requisitos</a></li>
     <li><a href="#instalação">Instalação</a></li>
+    <li><a href="#execute-o-projeto">Execute o projeto</a></li>
     <li><a href="#contato">Contato</a></li>
   </ol>
 </details>
@@ -61,8 +62,32 @@ Obs.: Para utilizar o projeto no Visual Studio Code, alterar as portas da api pa
    ```
 2. Abra o projeto no Visual Studio
    
-3. Altere a string de conexão com o banco de dados, na seção "ConnectionStrings" do arquivo appsetings.json que está na raiz do projeto.
+3. Altere a string de conexão com o banco de dados, na seção "ConnectionStrings" do arquivo appsetings.json que está na raiz do projeto, apontando o servidor do sql server que deseja instalar o banco de dados.
+4. Execute o comando para criação do banco de dados a partir das migrações:
+  * No Packet Manager do Nuget:
+    ```
+      Update-Database
+    ```
+  * No .NET Cli (Necessária a ferramenta dotnet-ef -> https://docs.microsoft.com/pt-br/ef/core/cli/dotnet):
+    ```
+      dotnet-ef database update
+    ```
+    
+### Execute o projeto
 
+1.Após instalado, execute o projeto:
+* No Visual Studio:
+    ```
+      Depurar -> Executar Depuração
+    ```
+    
+* No prompt de comando
+  ```sh
+    dotnet run
+  ```
+2.Abra o Projeto no Postman e import as configurações do arquivo "PedidosWeb.postman_collection.json"
+3.Execute uma das requisições salvas, lembrando que é necessário fazer o registro de usuário no endpoint api/authorize/register
+ 
 
 ## Contato
 
