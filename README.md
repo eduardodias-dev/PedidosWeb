@@ -86,6 +86,7 @@ Obs.: Para utilizar o projeto no Visual Studio Code, alterar as portas da api pa
     dotnet run
   ```
 2.Abra o Projeto no Postman e import as configurações do arquivo "PedidosWeb.postman_collection.json"
+
 3.Execute uma das requisições salvas, lembrando que é necessário fazer o registro de usuário no endpoint api/authorize/register
  
 
