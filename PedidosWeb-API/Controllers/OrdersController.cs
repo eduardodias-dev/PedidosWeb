@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PedidosWeb_API.Data;
 using PedidosWeb_API.Models;
 
 namespace PedidosWeb_API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
@@ -20,7 +22,7 @@ namespace PedidosWeb_API.Controllers
         public ActionResult<List<Order>> Get(){
             try
             { 
-                return _unitOfWork.OrderRepository.Get().ToList();
+                return _unitOfWork.OrderRepository.GetOrderAndClients().ToList();
             }catch(Exception e)
             {
                 return BadRequest(e.Message);
@@ -30,7 +32,7 @@ namespace PedidosWeb_API.Controllers
         public ActionResult<Order> Get(int id){
             try
             {
-                Order order = _unitOfWork.OrderRepository.GetById(x => x.OrderId == id);
+                Order order = _unitOfWork.OrderRepository.GetByIdAndIncludeClient(x => x.OrderId == id);
 
                 if(order == null)
                 {

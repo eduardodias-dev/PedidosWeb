@@ -8,7 +8,7 @@ namespace PedidosWeb_API.Data.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly PedidosWebContext _context;
+        protected readonly PedidosWebContext _context;
         public Repository(PedidosWebContext context)
         {
             _context = context;

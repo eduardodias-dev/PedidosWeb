@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PedidosWeb_API.Data;
 using PedidosWeb_API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PedidosWeb_API.Controllers
 {
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderItemsController : ControllerBase
@@ -23,7 +23,7 @@ namespace PedidosWeb_API.Controllers
         {
             try
             {
-                return _unitOfWork.OrderItemRepository.Get().ToList();
+                return _unitOfWork.OrderItemRepository.GetOrderItemsAndOrder().ToList();
             }
             catch (Exception e)
             {
@@ -35,7 +35,7 @@ namespace PedidosWeb_API.Controllers
         {
             try
             {
-                OrderItem OrderItem = _unitOfWork.OrderItemRepository.GetById(x => x.OrderItemId == id);
+                OrderItem OrderItem = _unitOfWork.OrderItemRepository.GetByIdAndIncludeOrder(x => x.OrderItemId == id);
 
                 if (OrderItem == null)
                 {

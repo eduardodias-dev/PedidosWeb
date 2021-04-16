@@ -1,18 +1,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PedidosWeb_API.Data;
+using PedidosWeb_API.Filters;
 
 namespace PedidosWeb_API
 {
@@ -29,15 +34,36 @@ namespace PedidosWeb_API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PedidosWeb_API", Version = "v1" });
+                //c.OperationFilter<AddRequiredHeaderParameter>();
             });
-
 
             //Adicionando o DbContext
             services.AddDbContext<PedidosWebContext>(options => options.UseSqlServer(Configuration.GetConnectionString("PedidosWebDb")));
+
+            //Adicionando o Identity integrado com EntityFramework
+            services.AddIdentity<IdentityUser,IdentityRole>()
+                .AddEntityFrameworkStores<PedidosWebContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = Configuration["TokenConfiguration:Issuer"],
+                            ValidateAudience = true,
+                            ValidAudience = Configuration["TokenConfiguration:Audience"],
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                        };
+                    });
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 

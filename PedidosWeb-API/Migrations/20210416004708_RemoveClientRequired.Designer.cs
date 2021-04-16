@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PedidosWeb_API.Data;
 
 namespace PedidosWeb_API.Migrations
 {
     [DbContext(typeof(PedidosWebContext))]
-    partial class PedidosWebContextModelSnapshot : ModelSnapshot
+    [Migration("20210416004708_RemoveClientRequired")]
+    partial class RemoveClientRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

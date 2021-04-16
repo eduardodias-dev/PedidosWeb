@@ -14,13 +14,13 @@ namespace PedidosWeb_API.Data
         {
             _context = context;
         }
-        private IRepository<Order> _orderRepo;
+        private IOrderRepository _orderRepo;
         private IRepository<Client> _clientRepo;
         private IRepository<Product> _productRepo;
-        private IRepository<OrderItem> _orderItemRepo;
+        private IOrderItemRepository _orderItemRepo;
         private IRepository<Category> _cateogoryRepo;
 
-        public IRepository<Order> OrderRepository
+        public IOrderRepository OrderRepository
         {
             get
             {
@@ -44,7 +44,7 @@ namespace PedidosWeb_API.Data
             }
         }
 
-        public IRepository<OrderItem> OrderItemRepository
+        public IOrderItemRepository OrderItemRepository
         {
             get
             {

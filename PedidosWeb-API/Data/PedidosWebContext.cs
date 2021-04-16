@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PedidosWeb_API.Models;
 
 namespace PedidosWeb_API.Data
 {
-    public class PedidosWebContext : DbContext
+    public class PedidosWebContext : IdentityDbContext
     {
         public PedidosWebContext(DbContextOptions<PedidosWebContext> options):base(options)
         {
