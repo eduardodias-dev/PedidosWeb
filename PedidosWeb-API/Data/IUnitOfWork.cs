@@ -9,11 +9,11 @@ namespace PedidosWeb_API.Data
 {
     public interface IUnitOfWork
     {
-        IOrderRepository OrderRepository { get; }
-        IRepository<Client> ClientRepository { get; }
-        IRepository<Product> ProductRepository { get; }
-        IOrderItemRepository OrderItemRepository { get; }
         IRepository<Category> CategoryRepository{ get; }
+        IRepository<Client> ClientRepository { get; }
+        IOrderRepository OrderRepository { get; }
+        IProductRepository ProductRepository { get; }
+        IOrderItemRepository OrderItemRepository { get; }
         void Commit();
     }
 }

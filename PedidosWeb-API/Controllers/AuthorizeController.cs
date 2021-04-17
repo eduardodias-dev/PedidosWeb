@@ -70,9 +70,7 @@ namespace PedidosWeb_API.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Usuário e/ou senha inválidos.");
-
-                    return BadRequest(ModelState);
+                    return BadRequest("Usuário e/ou senha inválidos.");
                 }
             }catch(Exception e)
             {

@@ -25,7 +25,7 @@ namespace PedidosWeb_API.Controllers
         {
             try
             {
-                return _unitOfWork.ProductRepository.Get().ToList();
+                return _unitOfWork.ProductRepository.GetProductsWithCategory().ToList();
             }
             catch (Exception e)
             {
@@ -37,7 +37,7 @@ namespace PedidosWeb_API.Controllers
         {
             try
             {
-                Product product = _unitOfWork.ProductRepository.GetById(x => x.ProductId == id);
+                Product product = _unitOfWork.ProductRepository.GetProductByIdWithCategory(x => x.ProductId == id);
 
                 if (product == null)
                 {
