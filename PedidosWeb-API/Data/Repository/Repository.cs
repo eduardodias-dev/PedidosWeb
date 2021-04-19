@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,7 +16,7 @@ namespace PedidosWeb_API.Data.Repository
         }
         public void Add(T entity)
         {
-            _context.Set<T>().AddAsync(entity);
+            _context.Set<T>().Add(entity);
         }
 
         public void Delete(T entity)
@@ -25,12 +26,12 @@ namespace PedidosWeb_API.Data.Repository
 
         public T GetById(Expression<Func<T, bool>> expression)
         {
-            return _context.Set<T>().FirstOrDefault(expression);
+            return _context.Set<T>().AsNoTracking().FirstOrDefault(expression);
         }
 
         public IQueryable<T> Get()
         {
-            return _context.Set<T>().AsQueryable();
+            return _context.Set<T>().AsNoTracking().AsQueryable();
         }
 
         public void Update(T entity)

@@ -14,12 +14,12 @@ namespace PedidosWeb_API.Data.Repository
 
         public Order GetByIdAndIncludeClient(Expression<Func<Order, bool>> expression)
         {
-            return _context.Orders.Include(x => x.Items).Include(x => x.Client).FirstOrDefault(expression);
+            return _context.Orders.AsNoTracking().Include(x => x.Items).Include(x => x.Client).FirstOrDefault(expression);
         }
 
         public IQueryable<Order> GetOrderAndClients()
         {
-            return _context.Orders.Include(x => x.Items).Include(order => order.Client);
+            return _context.Orders.AsNoTracking().Include(x => x.Items).Include(order => order.Client);
         }
 
     }

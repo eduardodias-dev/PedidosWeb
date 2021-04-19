@@ -14,12 +14,12 @@ namespace PedidosWeb_API.Data.Repository
 
         public Product GetProductByIdWithCategory(Expression<Func<Product, bool>> expression)
         {
-            return _context.Products.Include(x => x.Category).FirstOrDefault(expression);
+            return _context.Products.AsNoTracking().Include(x => x.Category).FirstOrDefault(expression);
         }
 
         public IQueryable<Product> GetProductsWithCategory()
         {
-            return _context.Products.Include(x => x.Category);
+            return _context.Products.AsNoTracking().Include(x => x.Category);
         }
     }
 }
