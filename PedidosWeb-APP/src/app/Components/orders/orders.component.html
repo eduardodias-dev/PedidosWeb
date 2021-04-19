@@ -1,0 +1,196 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Pedidos</h1>
+  </div>
+  <div class="d-flex justify-content-between">
+    <h2>Lista de pedidos</h2>
+    <div>
+      <button class="btn btn-outline-secondary" (click)="getOrders()">Atualizar</button>
+      <button class="btn btn-primary" (click)="openModal(modalCreate)">Novo</button>
+    </div>
+  </div>
+  <div class="mt-2">
+    <ngb-alert [type]="typeMessage" *ngIf="showMessage" (closed)="showMessage = false">{{ message }}</ngb-alert>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Cliente</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Endereço de entrega</th>
+          <th>Total</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of pagedOrders">
+          <td>{{order.orderId}}</td>
+          <td>{{order.client?.name}}</td>
+          <td>{{order.orderDate | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>
+            <span [class]="'status-badge status-'+orderStatus[order.status]">
+              {{orderStatus[order.status]}}
+            </span>
+          </td>
+          <td>{{order.deliveryAddress}}</td>
+          <td>R$ {{getTotal(order)}}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" (click)="editOrder(modalEdit, order)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteOrder(modalConfirmDelete, order)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refresh()">
+      </ngb-pagination>
+    
+      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refresh()">
+        <option [ngValue]="10">10 items por pág.</option>
+        <option [ngValue]="25">25 items por pág.</option>
+        <option [ngValue]="50">50 items por pág.</option>
+      </select>
+    </div>
+  </div>
+
+
+  <ng-template #modalCreate let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title" id="modal-basic-title">Novo Pedido</h2>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formCreate" >
+          <div class="form-group">
+            <label for="dateOfBirth">Cliente</label>
+            <div class="input-group">
+              <select formControlName="clientId" class="form-control mt-2" [(ngModel)]="orderInsert.clientId" (change)="updateDeliveryAddress($event,orderInsert)" required>
+                <option [value]="null">Selecione...</option>
+                <option [value]="client.clientId" *ngFor="let client of clients">{{client.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+              <label for="">Data</label>
+              <div class="input-group">
+                  <input type="datetime-local" [value]="orderInsert.orderDate.toLocaleString()" formControlName="orderDate" class="form-control mt-2" [(ngModel)]="orderInsert.orderDate" required>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="dateOfBirth">Endereço de entrega</label>
+              <div class="input-group">
+                  <input type="text" formControlName="deliveryAddress" class="form-control mt-2" [(ngModel)]="orderInsert.deliveryAddress" required>
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="saveOrder(modal)" [disabled]="savingOrder">{{!savingOrder ? 'Salvar':'Aguarde...'}}</button>
+    </div>
+</ng-template>
+
+<ng-template #modalEdit let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title" id="modal-basic-title">Editar Pedido</h2>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formCreate" >
+          <div class="form-group">
+            <label for="dateOfBirth">Cliente</label>
+            <div class="input-group">
+              <select formControlName="clientId" class="form-control mt-2" [(ngModel)]="orderEdit.clientId" required (change)="updateDeliveryAddress($event,orderEdit)">
+                <option [value]="null">Selecione...</option>
+                <option [value]="client.clientId" *ngFor="let client of clients">{{client.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+              <label for="">Data</label>
+              <div class="input-group">
+                  <input type="datetime-local" readonly formControlName="orderDate" class="form-control mt-2" [(ngModel)]="orderEdit.orderDate" required>
+              </div>
+          </div>
+          <div class="form-group">
+              <label for="dateOfBirth">Endereço de entrega</label>
+              <div class="input-group">
+                  <input type="text" formControlName="deliveryAddress" class="form-control mt-2" [(ngModel)]="orderEdit.deliveryAddress" required>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="dateOfBirth">Status</label>
+            <div class="input-group">
+                <select class="form-control" [(ngModel)]="orderEdit.status" formControlName="status" >
+                  <option [value]="i" *ngFor="let status of orderStatus; let i = index">{{status}}</option>
+                </select>
+            </div>
+          </div>
+          
+        </form>
+        <div class="order-items">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Items:</h2>
+            <button type="button" class="btn btn-sm btn-primary" (click)="addItem(orderEdit)">Novo</button>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="col-8">Produto</span>
+            <span class="col-4">Quantidade</span>
+          </div>
+          <hr class="mt-0">
+          <div class="d-flex justify-content-between align-items-center" *ngFor="let item of orderEdit.items">
+            <div class="col-8">
+              <select class="form-control" [(ngModel)]="item.productId" readonly="true">
+                <option [value]="null">Selecione...</option>
+                <option [value]="product.productId" *ngFor="let product of products">{{product.name}} - R${{product.price}}</option>
+              </select>
+            </div>
+            <div class="col-4 d-flex align-items-center">
+              <input type="number" step="1" class="form-control" placeholder="qtde" [(ngModel)]="item.quantity" (change)="updateItem(item)">
+              <button type="button" class="btn btn-sm btn-danger ml-2" (click)="removeItem(item, orderEdit)">Excluir</button>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center" *ngIf="showItemForm" >
+            <div class="col-6">
+              <select class="form-control" [(ngModel)]="newItem.productId" >
+                <option [value]="null">Selecione...</option>
+                <option [value]="product.productId" *ngFor="let product of filterProductsEdit">{{product.name}} - R${{product.price}}</option>
+              </select>
+            </div>
+            <div class="col-6 d-flex align-items-center">
+              <input type="number" step="1" class="form-control" placeholder="qtde" [(ngModel)]="newItem.quantity" >
+              <button type="button" class="btn btn-sm btn-primary ml-2" (click)="insertToOrder(orderEdit)">OK</button>
+              <button type="button" class="btn btn-sm btn-danger ml-2" (click)="showItemForm = false">Cancelar</button>
+            </div>
+          </div>
+        </div>
+        <hr class="mt-1">
+        <div class="col-4 offset-8 d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">Total:</h3>
+          <b class="">R$ {{getTotal(orderEdit)}}</b>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="saveEditOrder(modal)" [disabled]="savingOrder">{{!savingOrder ? 'Salvar':'Aguarde...'}}</button>
+    </div>
+</ng-template>
+
+<ng-template #modalConfirmDelete let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title" id="modal-basic-title">Excluir Pedido</h2>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Confirma a exclusão do Pedido <b>{{orderDelete.orderId}}</b> ?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="confirmDeleteOrder(modal)" [disabled]="savingOrder">{{!savingOrder ? 'OK':'Aguarde...'}}</button>
+    </div>
+</ng-template>

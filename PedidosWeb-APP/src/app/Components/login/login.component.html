@@ -1,0 +1,17 @@
+
+<form class="form-signin" [formGroup]="formLogin" (submit)="login()">
+    <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+    <label for="name" class="sr-only">Usuário</label>
+    <input type="text" formControlName="name" class="form-control mt-2" placeholder="Usuário"  [(ngModel)]="userLogin.name" required autofocus>
+    <label for="password" class="sr-only">Password</label>
+    <input type="password" formControlName="password" class="form-control mt-2" placeholder="Senha"  [(ngModel)]="userLogin.password" required>
+    <ngb-alert [type]="'danger'" *ngIf="showError" (closed)="showError = false">{{ errorMessage }}</ngb-alert>
+    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="loading">{{ loading ? 'Aguarde...' : 'Login'}}</button>
+    <h3 class="text-center mt-2">
+        <a href="register">Criar conta</a>
+    </h3>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
+</form>
+
+  
+  

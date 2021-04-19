@@ -1,0 +1,119 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 bclient-bottom">
+    <h1 class="h2">Clientes</h1>
+  </div>
+  <div class="d-flex justify-content-between">
+    <h2>Lista de clientes</h2>
+    <div>
+        <button class="btn btn-outline-secondary" (click)="getClients()">Atualizar</button>
+        <button class="btn btn-primary" (click)="openModal(modalCreate)">Novo</button>
+    </div>
+  </div>
+  <div class="mt-2">
+      <ngb-alert [type]="typeMessage" *ngIf="showMessage" (closed)="showMessage = false">{{ message }}</ngb-alert>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nome</th>
+          <th>Endereço</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of pagedClients">
+          <td>{{client.clientId}}</td>
+          <td>{{client.name}}</td>
+          <td>{{client.address}}</td>
+          <td>
+              <button class="btn btn-primary btn-sm" (click)="editClient(modalEdit, client)">Editar</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteClient(modalConfirmDelete, client)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refresh()">
+      </ngb-pagination>
+    
+      <select class="custom-select" style="width: auto" [(ngModel)]="pageSize" (ngModelChange)="refresh()">
+        <option [ngValue]="10">10 items por pág.</option>
+        <option [ngValue]="25">25 items por pág.</option>
+        <option [ngValue]="50">50 items por pág.</option>
+      </select>
+    </div>
+  </div>
+
+
+<ng-template #modalCreate let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title" id="modal-basic-title">Novo Cliente</h2>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formCreate" >
+            <div class="form-group">
+                <label for="dateOfBirth">Nome</label>
+                <div class="input-group">
+                    <input type="text" formControlName="name" class="form-control mt-2" [(ngModel)]="clientInsert.name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dateOfBirth">Endereço</label>
+                <div class="input-group">
+                    <input type="text" formControlName="address" class="form-control mt-2" [(ngModel)]="clientInsert.address" required>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="saveClient(modal)" [disabled]="savingClient">{{!savingClient ? 'Salvar':'Aguarde...'}}</button>
+    </div>
+</ng-template>
+
+<ng-template #modalEdit let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title" id="modal-basic-title">Editar Cliente</h2>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="formCreate" >
+            <div class="form-group">
+                <label for="dateOfBirth">Nome</label>
+                <div class="input-group">
+                    <input type="text" formControlName="name" class="form-control mt-2" [(ngModel)]="clientEdit.name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="dateOfBirth">Endereço</label>
+                <div class="input-group">
+                    <input type="text" formControlName="address" class="form-control mt-2" [(ngModel)]="clientEdit.address" required>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="saveEditClient(modal)" [disabled]="savingClient">{{!savingClient ? 'Salvar':'Aguarde...'}}</button>
+    </div>
+</ng-template>
+
+<ng-template #modalConfirmDelete let-modal>
+    <div class="modal-header">
+        <h2 class="modal-title" id="modal-basic-title">Excluir Cliente</h2>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Confirma a exclusão do Cliente <b>{{clientDelete.name}}</b> ?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="confirmDeleteClient(modal)" [disabled]="savingClient">{{!savingClient ? 'OK':'Aguarde...'}}</button>
+    </div>
+</ng-template>
+
