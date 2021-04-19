@@ -12,6 +12,13 @@
      <li><a href="#pré-requisitos">Pré-requisitos</a></li>
     <li><a href="#instalação">Instalação</a></li>
     <li><a href="#execute-o-projeto">Execute o projeto</a></li>
+    <li><a href="#frontend">Montando o FrontEnd</a>
+        <ul>
+          <li><a href="#frontend">Pré-requisitos</a></li>
+          <li><a href="#instalação">Instalação</a></li>
+          <li><a href="#execute-o-webapp">Execute o webApp</a></li>
+        </ul>
+      </li>
     <li><a href="#contato">Contato</a></li>
   </ol>
 </details>
@@ -89,6 +96,43 @@ Obs.: Para utilizar o projeto no Visual Studio Code, alterar as portas da api pa
 
 3.Execute uma das requisições salvas, lembrando que é necessário fazer o registro de usuário no endpoint api/authorize/register
  
+### FrontEnd
+### Pré-requisitos
+
+* Node 10+ com npm
+  ```
+  https://nodejs.org/en/
+  ```
+* Visual Studio Code(recomendado)
+  ```
+  https://code.visualstudio.com/
+  ```
+* Angular 10+
+  ```
+  https://angular.io/cli
+  ```
+### Instalação
+1. Abra a pasta PedidosWeb-APP no prompt de comando, ou no terminal do visual studio code
+2. Execute o comando de instalação na pasta do projeto front-end
+   ```sh
+   npm install
+   ```
+   
+### Execute o webApp
+1. Abra a pasta PedidosWeb-APP no prompt de comando, ou no terminal do visual studio code
+   ```sh
+   ng serve
+   ```
+   ou
+    ```sh
+   npm run start
+   ```
+2. Abra o projeto no navegador em (http://localhost:4200)
+
+*Obs: Caso esteja utilizando o Google Chrome e a aplicação redirecionar automaticamente para https, siga os seguintes passos:
+  Abra o DevTools do Chrome (CTRL+SHIFT+I)
+  Clique com botão direito no botão de recarregar do navegador.
+  Escolha a opção "Esvazia cache e recarregamento forçado"
 
 ## Contato
 
